@@ -1,14 +1,27 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
+import os
 
 app = Flask(__name__)
 
 CORS(app)
 
-model = joblib.load("../model/yield_model.pkl")
-area_encoder = joblib.load("../model/area_encoder.pkl")
-item_encoder = joblib.load("../model/item_encoder.pkl")
+# Get the project root directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Load trained model and encoders
+model = joblib.load(
+    os.path.join(BASE_DIR, "model", "yield_model.pkl")
+)
+
+area_encoder = joblib.load(
+    os.path.join(BASE_DIR, "model", "area_encoder.pkl")
+)
+
+item_encoder = joblib.load(
+    os.path.join(BASE_DIR, "model", "item_encoder.pkl")
+)
 
 
 @app.route("/")
@@ -39,6 +52,7 @@ def predict():
     pesticides = data["pesticides"]
     temperature = data["temperature"]
 
+    # Encode categorical values
     area = area_encoder.transform([area])[0]
     crop = item_encoder.transform([crop])[0]
 
@@ -50,11 +64,12 @@ def predict():
         temperature
     ]]
 
+    # Make prediction
     prediction = model.predict(input_data)
 
     predicted_yield = float(prediction[0])
 
-
+    # Generate recommendation
     if predicted_yield < 19919:
 
         recommendation = (
@@ -79,16 +94,11 @@ def predict():
             "management practices for good production."
         )
 
-
     return jsonify({
-
         "predicted_yield": predicted_yield,
-
         "recommendation": recommendation
-
     })
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-
