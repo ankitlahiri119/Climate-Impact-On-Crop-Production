@@ -52,10 +52,43 @@ def predict():
 
     prediction = model.predict(input_data)
 
+    predicted_yield = float(prediction[0])
+
+
+    if predicted_yield < 19919:
+
+        recommendation = (
+            "Low yield is predicted. "
+            "Consider improving irrigation, soil nutrients, "
+            "and monitoring rainfall and temperature conditions."
+        )
+
+    elif predicted_yield <= 104677:
+
+        recommendation = (
+            "Normal yield is predicted. "
+            "Maintain proper irrigation, soil management, "
+            "and regularly monitor climate conditions."
+        )
+
+    else:
+
+        recommendation = (
+            "High yield is predicted. "
+            "Maintain the current agricultural and climate "
+            "management practices for good production."
+        )
+
+
     return jsonify({
-        "predicted_yield": float(prediction[0])
+
+        "predicted_yield": predicted_yield,
+
+        "recommendation": recommendation
+
     })
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
