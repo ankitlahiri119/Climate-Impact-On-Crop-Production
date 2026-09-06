@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     async function loadOptions() {
       try {
-        const response = await fetch("http://127.0.0.1:5000/options");
+        const response = await fetch("https://climate-crop-api.onrender.com/options");
         const data = await response.json();
         setAreas(data.areas);
         setCrops(data.crops);
@@ -44,7 +44,7 @@ function App() {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch("https://climate-crop-api.onrender.com/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
