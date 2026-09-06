@@ -8,3 +8,4 @@ frontend/dist/
 .vscode/
 .vercel
 .env*
+data/
